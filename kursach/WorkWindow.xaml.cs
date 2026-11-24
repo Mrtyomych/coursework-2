@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.EntityFrameworkCore;
 
 namespace kursach
 {
@@ -22,6 +24,91 @@ namespace kursach
         public WorkWindow()
         {
             InitializeComponent();
+            LoadData(); 
+        }
+
+        private void BtnAddCar_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtRegNumber.Text) || cmbBrand.SelectedItem == null || cmbOwner.SelectedItem == null)
+            {
+                MessageBox.Show("Заполните номер, выберите марку и владельца!");
+                return;
+            }
+
+            using (var db = new ApplicationContext())
+            {
+                Car newCar = new Car();
+
+                newCar.RegNumber = txtRegNumber.Text;
+                newCar.Color = txtColor.Text;
+
+                if (int.TryParse(txtYear.Text, out int yearResult))
+                {
+                    newCar.Year = yearResult;
+                }
+                else
+                {
+                    MessageBox.Show("Год должен быть числом!");
+                    return; 
+                }
+ 
+                newCar.IdBrand = (int)cmbBrand.SelectedValue;
+                newCar.IdOwner = (int)cmbOwner.SelectedValue;
+
+                string digits = "";
+                foreach (char c in txtRegNumber.Text)
+                {
+                    if (char.IsDigit(c)) digits += c;
+                }
+                newCar.DigitPart = digits;
+
+                db.Cars.Add(newCar);
+                db.SaveChanges();
+
+                LoadData(); 
+                MessageBox.Show("Автомобиль добавлен!");
+            }
+        }
+
+        private void BtnAddOwner_Click(object sender, RoutedEventArgs e) 
+        {
+            if (string.IsNullOrWhiteSpace(txtOwnerName.Text) ||
+                string.IsNullOrWhiteSpace(txtOwnerAddress.Text) ||
+                string.IsNullOrWhiteSpace(txtOwnerPhone.Text) ||
+                string.IsNullOrWhiteSpace(txtOwnerPassport.Text))
+            {
+                MessageBox.Show("Все поля должны быть заполнены!");
+                return;
+            }
+            using (var db = new ApplicationContext())
+            {
+
+                Owner newOwner = new Owner();
+
+                newOwner.FullName = txtOwnerName.Text;
+                newOwner.Address = txtOwnerAddress.Text;
+                newOwner.Phone = txtOwnerPhone.Text;
+                newOwner.Passport = txtOwnerPassport.Text;
+
+                db.Owners.Add(newOwner);
+                db.SaveChanges();
+                LoadData();
+            }
+        }
+        private void LoadData()
+        {
+            using (var db = new ApplicationContext())
+            {
+                var cars = db.Cars
+                             .Include(c => c.Brand)
+                             .Include(c => c.Owner)
+                             .ToList();
+                CarsGrid.ItemsSource = cars;
+
+                cmbBrand.ItemsSource = db.Brands.ToList();
+                cmbOwner.ItemsSource = db.Owners.ToList();
+                OwnersGrid.ItemsSource = db.Owners.ToList();
+            }
         }
     }
 }

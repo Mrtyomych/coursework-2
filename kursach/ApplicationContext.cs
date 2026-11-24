@@ -12,6 +12,9 @@ namespace kursach
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Car> Cars { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Owner> Owners { get; set; }
+        public DbSet<Fine> Fines { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

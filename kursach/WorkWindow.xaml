@@ -8,7 +8,71 @@
 		Style="{StaticResource MaterialDesignWindow}"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="WorkWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+	<Grid>
+		<TabControl Margin="10">
+			<TabItem Header="Автомобили">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+
+					
+					<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+						<TextBox x:Name="txtRegNumber" Width="100" materialDesign:HintAssist.Hint="Номер авто" Margin="5"/>
+						<TextBox x:Name="txtColor" Width="100" materialDesign:HintAssist.Hint="Цвет" Margin="5"/>
+						<TextBox x:Name="txtYear" Width="80" materialDesign:HintAssist.Hint="Год" Margin="5"/>
+						<ComboBox x:Name="cmbBrand" Width="120" DisplayMemberPath="BrandName" SelectedValuePath="IdBrand" Margin="5"/>
+						<ComboBox x:Name="cmbOwner" Width="150" DisplayMemberPath="FullName" SelectedValuePath="IdOwner" Margin="5"/>
+						<Button Content="Добавить" Click="BtnAddCar_Click" Margin="5"/>
+					</StackPanel>
+
+					
+					<DataGrid Grid.Row="1" x:Name="CarsGrid" AutoGenerateColumns="False" IsReadOnly="True" Margin="10">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Номер" Binding="{Binding RegNumber}"/>
+							<DataGridTextColumn Header="Марка" Binding="{Binding Brand.BrandName}"/>
+							<DataGridTextColumn Header="Владелец" Binding="{Binding Owner.FullName}"/>
+							<DataGridTextColumn Header="Цвет" Binding="{Binding Color}"/>
+							<DataGridTextColumn Header="Год" Binding="{Binding Year}"/>
+						</DataGrid.Columns>
+					</DataGrid>
+				</Grid>
+			</TabItem>
+			<TabItem Header="Владельцы">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+
+					<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+						<TextBox x:Name="txtOwnerName" Width="150" materialDesign:HintAssist.Hint="ФИО" Margin="5"/>
+						<TextBox x:Name="txtOwnerAddress" Width="150" materialDesign:HintAssist.Hint="Адрес" Margin="5"/>
+						<TextBox x:Name="txtOwnerPhone" Width="120" materialDesign:HintAssist.Hint="Телефон" Margin="5"/>
+						<TextBox x:Name="txtOwnerPassport" Width="120" materialDesign:HintAssist.Hint="Паспорт" Margin="5"/>
+						<Button Content="Добавить" Click="BtnAddOwner_Click" Margin="5"/>
+					</StackPanel>
+
+					<!-- Таблица владельцев -->
+					<DataGrid Grid.Row="1" x:Name="OwnersGrid" AutoGenerateColumns="False" IsReadOnly="True" Margin="10">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="ФИО" Binding="{Binding FullName}"/>
+							<DataGridTextColumn Header="Адрес" Binding="{Binding Address}"/>
+							<DataGridTextColumn Header="Телефон" Binding="{Binding Phone}"/>
+							<DataGridTextColumn Header="Паспорт" Binding="{Binding Passport}"/>
+						</DataGrid.Columns>
+					</DataGrid>
+				</Grid>
+			</TabItem>
+			<TabItem Header="Штрафы">
+				<Grid></Grid>
+			</TabItem>
+			<TabItem Header="Запросы">
+				<Grid>
+					
+				</Grid>
+			</TabItem>
+		</TabControl>
+	</Grid>
 </Window>
