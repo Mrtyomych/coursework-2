@@ -66,7 +66,6 @@ namespace kursach
                 db.SaveChanges();
 
                 LoadData(); 
-                MessageBox.Show("Автомобиль добавлен!");
             }
         }
 
@@ -95,6 +94,63 @@ namespace kursach
                 LoadData();
             }
         }
+
+        private void BtnAddFine_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbFineCar.SelectedValue == null ||
+                string.IsNullOrWhiteSpace(txtFineAmount.Text) ||
+                string.IsNullOrWhiteSpace(txtFineDate.Text))
+            {
+                MessageBox.Show("Выберите автомобиль, укажите дату и сумму штрафа!");
+                return;
+            }
+
+            using (var db = new ApplicationContext())
+            {
+                if (!decimal.TryParse(txtFineAmount.Text, out decimal amountResult))
+                {
+                    MessageBox.Show("Сумма должна быть числом!");
+                    return;
+                }
+
+                Fine newFine = new Fine
+                {
+                    IdCar = (int)cmbFineCar.SelectedValue, 
+                    FineDate = txtFineDate.Text,           
+                    Amount = amountResult,
+                    Reason = txtFineReason.Text,
+                    Status = txtFineStatus.Text
+                };
+
+                db.Fines.Add(newFine);
+                db.SaveChanges();
+
+                LoadData();
+
+                txtFineAmount.Clear();
+                txtFineDate.Clear();
+                txtFineReason.Clear();
+                txtFineStatus.Clear();
+            }
+        }
+
+        private void BtnSearchGeneral_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void BtnSearchD_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void BtnSearchE_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void BtnSearchJ_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+        
         private void LoadData()
         {
             using (var db = new ApplicationContext())
@@ -108,6 +164,10 @@ namespace kursach
                 cmbBrand.ItemsSource = db.Brands.ToList();
                 cmbOwner.ItemsSource = db.Owners.ToList();
                 OwnersGrid.ItemsSource = db.Owners.ToList();
+
+                var fines = db.Fines.Include(f => f.Car).ToList();
+                FinesGrid.ItemsSource = fines;
+                cmbFineCar.ItemsSource = db.Cars.ToList();
             }
         }
     }

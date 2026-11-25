@@ -39,6 +39,9 @@
 					</DataGrid>
 				</Grid>
 			</TabItem>
+			
+			
+			
 			<TabItem Header="Владельцы">
 				<Grid>
 					<Grid.RowDefinitions>
@@ -54,7 +57,6 @@
 						<Button Content="Добавить" Click="BtnAddOwner_Click" Margin="5"/>
 					</StackPanel>
 
-					<!-- Таблица владельцев -->
 					<DataGrid Grid.Row="1" x:Name="OwnersGrid" AutoGenerateColumns="False" IsReadOnly="True" Margin="10">
 						<DataGrid.Columns>
 							<DataGridTextColumn Header="ФИО" Binding="{Binding FullName}"/>
@@ -65,14 +67,83 @@
 					</DataGrid>
 				</Grid>
 			</TabItem>
+			
+			
+			
 			<TabItem Header="Штрафы">
-				<Grid></Grid>
-			</TabItem>
-			<TabItem Header="Запросы">
 				<Grid>
-					
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+
+					<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+						<ComboBox x:Name="cmbFineCar" Width="150" DisplayMemberPath="RegNumber" SelectedValuePath="IdCar" materialDesign:HintAssist.Hint="Автомобиль" Margin="5"/>
+
+						<TextBox x:Name="txtFineDate" Width="100" materialDesign:HintAssist.Hint="Дата (ГГГГ-ММ-ДД)" Margin="5"/>
+						<TextBox x:Name="txtFineAmount" Width="80" materialDesign:HintAssist.Hint="Сумма" Margin="5"/>
+						<TextBox x:Name="txtFineReason" Width="200" materialDesign:HintAssist.Hint="Причина" Margin="5"/>
+						<TextBox x:Name="txtFineStatus" Width="120" materialDesign:HintAssist.Hint="Статус" Margin="5"/>
+
+						<Button Content="Выписать штраф" Click="BtnAddFine_Click" Margin="5"/>
+					</StackPanel>
+
+					<DataGrid Grid.Row="1" x:Name="FinesGrid" AutoGenerateColumns="False" IsReadOnly="True" Margin="10">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Автомобиль" Binding="{Binding Car.RegNumber}"/>
+							<DataGridTextColumn Header="Дата" Binding="{Binding FineDate}"/>
+							<DataGridTextColumn Header="Сумма" Binding="{Binding Amount}"/>
+							<DataGridTextColumn Header="Причина" Binding="{Binding Reason}"/>
+							<DataGridTextColumn Header="Статус" Binding="{Binding Status}"/>
+						</DataGrid.Columns>
+					</DataGrid>
 				</Grid>
 			</TabItem>
+
+
+
+			<TabItem Header="Запросы">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+
+					<StackPanel Grid.Row="0" Margin="10">
+						<WrapPanel>
+							<ComboBox x:Name="cmbSearchBrand" Width="120" DisplayMemberPath="BrandName" SelectedValuePath="IdBrand" materialDesign:HintAssist.Hint="Марка" Margin="5"/>
+							<TextBox x:Name="txtSearchColor" Width="120" materialDesign:HintAssist.Hint="Цвет" Margin="5"/>
+							<TextBox x:Name="txtSearchRegNumber" Width="120" materialDesign:HintAssist.Hint="Номер авто" Margin="5"/>
+							<TextBox x:Name="txtSearchDigitPart" Width="120" materialDesign:HintAssist.Hint="Цифры номера" Margin="5"/>
+							<Button Content="Найти" Click="BtnSearchGeneral_Click" Background="#673AB7" Foreground="White" Margin="5"/>
+						</WrapPanel>
+
+						<WrapPanel Margin="0,10,0,0">
+							<TextBlock Text="Спец. запросы:" VerticalAlignment="Center" Margin="5"/>
+							<Button Content="д) Со штрафами" Click="BtnSearchD_Click" Margin="5"/>
+							<Button Content="е) Макс. сумма" Click="BtnSearchE_Click" Margin="5"/>
+							<StackPanel Orientation="Horizontal" Margin="5">
+								<TextBox x:Name="txtSearchFineCount" Width="50" materialDesign:HintAssist.Hint="Кол-во" Margin="0,0,5,0"/>
+								<Button Content="ж) Найти" Click="BtnSearchJ_Click"/>
+							</StackPanel>
+						</WrapPanel>
+					</StackPanel>
+
+					<DataGrid Grid.Row="2" x:Name="SearchResultsGrid" AutoGenerateColumns="False" IsReadOnly="True" Margin="10">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Номер" Binding="{Binding RegNumber}"/>
+							<DataGridTextColumn Header="Марка" Binding="{Binding Brand.BrandName}"/>
+							<DataGridTextColumn Header="Владелец" Binding="{Binding Owner.FullName}"/>
+							<DataGridTextColumn Header="Цвет" Binding="{Binding Color}"/>
+							<DataGridTextColumn Header="Год" Binding="{Binding Year}"/>
+							<DataGridTextColumn Header="Сумма штрафов" Binding="{Binding TotalFines}"/>
+						</DataGrid.Columns>
+					</DataGrid>
+				</Grid>
+			</TabItem>
+
+
+
 		</TabControl>
 	</Grid>
 </Window>
